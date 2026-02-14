@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Valentine 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+    --pink: #ff4d6d;
+    --light: #ffb3c1;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle, var(--pink), #b5179e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    color: white;
+}
+
+/* GLASS CARD */
+.card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(14px);
+    padding: 35px;
+    border-radius: 30px;
+    text-align: center;
+    width: 92%;
+    max-width: 430px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    animation: popIn 1.2s ease;
+    z-index: 10;
+}
+
+h1 {
+    font-size: 2.3rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px rgba(255,255,255,0.6);
+}
+
+.typing {
+    font-size: 1.1rem;
+    min-height: 95px;
+    margin: 20px 0;
+}
+
+/* BUTTONS */
+button {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 40px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 6px;
+    background: white;
+    color: var(--pink);
+    transition: 0.3s;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+button:hover {
+    transform: scale(1.12);
+}
+
+/* HEARTS */
+.heart {
+    position: absolute;
+    bottom: -20px;
+    font-size: 20px;
+    animation: float 6s linear infinite;
+    opacity: 0.9;
+}
+
+/* FIREWORKS */
+canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ANIMATIONS */
+@keyframes float {
+    0% { transform: translateY(0); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(-120vh); opacity: 0; }
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+footer {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    opacity: 0.95;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fx"></canvas>
+
+<audio id="music" loop>
+    <source src="love.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+    <h1 id="title">💖 Happy Valentine 💖</h1>
+
+    <div class="typing" id="typing"></div>
+
+    <button onclick="startLove()">Feel the Love 💘</button>
+    <button onclick="share()">Share 💌</button>
+
+    <footer>
+        Wishing you love, joy & beautiful moments 🌹
+    </footer>
+</div>
+
+<script>
+/* 🎯 NAME FROM LINK  */
+const params = new URLSearchParams(window.location.search);
+const name = params.get("name");
+
+/* 🎶 MUSIC */
+const music = document.getElementById("music");
+
+/* 💬 MESSAGE */
+const message = `
+${name ? name + "," : "Hey,"}
+just a little reminder that you are amazing 💕
+May your day be filled with smiles,
+love, and positive energy ✨
+Happy Valentine’s Day 🌹
+`;
+
+let i = 0;
+function typeText() {
+    if (i < message.length) {
+        document.getElementById("typing").innerHTML +=
+            message.charAt(i) === "\n" ? "<br>" : message.charAt(i);
+        i++;
+        setTimeout(typeText, 40);
+    }
+}
+typeText();
+
+/* 💘 START LOVE */
+function startLove() {
+    music.play();
+    hearts();
+    fireworks();
+}
+
+/* 💖 HEARTS */
+function hearts() {
+    for (let i = 0; i < 35; i++) {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.innerHTML = "❤️";
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.fontSize = (Math.random() * 20 + 15) + "px";
+        h.style.animationDuration = (Math.random() * 3 + 3) + "s";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 6000);
+    }
+}
+
+/* 🎆 FIREWORKS */
+const canvas = document.getElementById("fx");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+function fireworks() {
+    for (let i = 0; i < 120; i++) {
+        ctx.beginPath();
+        ctx.arc(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height / 2,
+            2,
+            0,
+            Math.PI * 2
+        );
+        ctx.fillStyle = `hsl(${Math.random()*360},100%,70%)`;
+        ctx.fill();
+    }
+    setTimeout(() => ctx.clearRect(0,0,canvas.width,canvas.height), 900);
+}
+
+/* 📱 SHARE */
+function share() {
+    const msg = "Happy Valentine 💖 I made this little surprise for you 🌹";
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg + " " + location.href)}`, "_blank");
+}
+</script>
+
+</body>
+</html>
